@@ -39,7 +39,7 @@ user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
     'User-Agent': user_agent,
-    'Cookie': '[ausfuellen]',
+    'Cookie': '[Cookie hier reinkopieren]',
 }
 
 #territory = 'de'
@@ -120,7 +120,13 @@ if mode is None:
                                 break
                             j = j + 1
 
-                        foldername = str(str(i)+' '+str(datetime_start_local)[11:16]+' - '+str(datetime_ende_local)[11:16]+ ' Uhr: '+
+                        if espplayerMain['included'][i]['attributes']['broadcastType'] == 'LIVE':
+                            foldername = str(
+                                espplayerMain['included'][i]['attributes']['broadcastType']+' - '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
+                                sender[0] + ': ' + espplayerMain['included'][i]['attributes']['name'] + ' (' +
+                                espplayerMain['included'][i]['attributes']['materialType'] + ')')
+                        else:
+                            foldername = str(str(datetime_start_local)[11:16]+' - '+str(datetime_ende_local)[11:16]+ ' Uhr: '+
                               sender[0]+': '+espplayerMain['included'][i]['attributes']['name'] +' ('+espplayerMain['included'][i]['attributes']['broadcastType']+ ') ('+espplayerMain['included'][i]['attributes']['materialType']+')')
                         url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerMain['included'][i]['id']})
                         li = xbmcgui.ListItem(foldername, iconImage=bildurl)
@@ -143,24 +149,12 @@ elif mode[0] == 'playStream':
     else:
         espplayerStream = espplayerStream.json()
         xbmc.log(str(espplayerStream))
-        streamURL = str(espplayerStream['data']['attributes']['streaming']['mss'])
-        xbmc.log('hierasd '+streamURL)
-        #listitem = xbmcgui.ListItem(path=streamURL + "|" + user_agent)
-        #listitem = xbmcgui.ListItem(path=streamURL)
-        #listitem.setProperty('inputstreamaddon', 'inputstream.adaptive')
-        #listitem.setProperty('inputstream.adaptive.manifest_type', 'mpd')
-        #listitem.setInfo('video', '')
-        #listitem.setIsFolder(False)
-        #listitem.setProperty('IsPlayable', 'true')
-        #xbmcplugin.setResolvedUrl(_addon_handler, True, listitem)
+        streamURL = str(espplayerStream['data']['attributes']['streaming']['mss']['url'])
+        xbmc.log('hierasd '+str(streamURL))
 
-        listitem = xbmcgui.ListItem()
-        listitem.setContentLookup(False)
-        listitem.setMimeType('application/dash+xml')
-        listitem.setProperty('inputstream.adaptive.manifest_update_parameter', 'full')
-        listitem.setProperty('inputstreamaddon', 'inputstream.adaptive')
-        listitem.setProperty('inputstream.adaptive.manifest_type', 'mpd')
-        #listitem.setProperty('inputstream.adaptive.license_key', license_key)
-        listitem.setPath(streamURL)
-        #xbmc.Player().play(streamURL, listitem)
-        xbmcplugin.setResolvedUrl(_addon_handler, True, listitem)
+        li = xbmcgui.ListItem(path=streamURL)
+        li.setProperty('inputstreamaddon', 'inputstream.adaptive')
+        li.setProperty('inputstream.adaptive.manifest_type', 'ism')
+        #li.setProperty('inputstream.adaptive.manifest_type', 'mpd')
+        li.setContentLookup(False)
+        xbmcplugin.setResolvedUrl(_addon_handler, True, listitem=li)
