@@ -26,7 +26,7 @@ _addon         = xbmcaddon.Addon(id=_addon_id)
 _addon_name    = _addon.getAddonInfo('name')
 _addon_handler = int(sys.argv[1])
 _addon_url     = sys.argv[0]
-_addon_path    = xbmc.translatePath(_addon.getAddonInfo("path") )
+_addon_path    = xbmc.translatePath(_addon.getAddonInfo('path') )
 
 def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
@@ -39,7 +39,7 @@ user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
     'User-Agent': user_agent,
-    'Cookie': '[Cookie hier reinkopieren]',
+    'Cookie': '[Cookie hier eingeben]',
 }
 
 #territory = 'de'
@@ -53,101 +53,101 @@ if mode is None:
     meData = requests.get(url=urlMe, headers=header)
     meData = meData.json()
 
-    try:
-        territory = str(meData['data']['attributes']['verifiedHomeTerritory'])
-        #print('ESP-Test' + str(meData['data']['attributes']['packages']))
+    #try:
+    territory = str(meData['data']['attributes']['verifiedHomeTerritory'])
+    #print('ESP-Test' + str(meData['data']['attributes']['packages']))
 
 
-        #Main auslesen:
-        espplayerMain = requests.get(url=urlEPG, headers=header)
-        espplayerMain = espplayerMain.json()
-        i = 0
-        i1 = 0
-        availableInTerritory = False
-        j = 0
-        while i < len(espplayerMain['included']):
-            # print(str(i))
-            try:
-                if espplayerMain['included'][i]['attributes']['videoType'] == 'LIVE':
-                    j = 0
-                    availableInTerritory = False
-                    while j < len(espplayerMain['included'][i]['attributes']['playableTerritories']['territories']):
-                        if espplayerMain['included'][i]['attributes']['playableTerritories']['territories'][j] == territory:
-                            availableInTerritory = True
-                            break
-                        j = j + 1
-                    if availableInTerritory:
-                        #espplayerMain['included'][i]['attributes']['scheduleStart']
-                        datetime_start = datetime.datetime(
-                            int(espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][:4]),
-                            int(espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][
+    #Main auslesen:
+    espplayerMain = requests.get(url=urlEPG, headers=header)
+    espplayerMain = espplayerMain.json()
+    i = 0
+    i1 = 0
+    availableInTerritory = False
+    j = 0
+    while i < len(espplayerMain['included']):
+        # print(str(i))
+        try:
+            if espplayerMain['included'][i]['attributes']['videoType'] == 'LIVE':
+                j = 0
+                availableInTerritory = False
+                while j < len(espplayerMain['included'][i]['attributes']['playableTerritories']['territories']):
+                    if espplayerMain['included'][i]['attributes']['playableTerritories']['territories'][j] == territory:
+                        availableInTerritory = True
+                        break
+                    j = j + 1
+                if availableInTerritory:
+                    #espplayerMain['included'][i]['attributes']['scheduleStart']
+                    datetime_start = datetime.datetime(
+                        int(espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][:4]),
+                        int(espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][
+                            5:7]), int(
+                            espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][8:10]), int(
+                            espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][11:13]), int(
+                            espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][14:16]), int(
+                            espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][17:19]))
+                    #5 min vor Streamstart anzeigen
+                    if (datetime.datetime.utcnow() - datetime_start > datetime.timedelta(seconds=-300)):
+                        #Umrechnung Zeitzone
+                        t = str(datetime.datetime.now() - datetime.datetime.utcnow())
+                        h, m, s = t.split(':')
+                        secondsDelta = int(h) * 60 * 60 + int(m) * 60
+                        #+int (s) ; macht mit Android probleme
+                        datetime_start_local = datetime_start + datetime.timedelta(seconds=secondsDelta)
+
+                        sender = espplayerMain['included'][i]['attributes']['path'].split('/')
+
+                        #endzeit
+                        datetime_ende = datetime.datetime(
+                            int(espplayerMain['included'][i]['attributes']['scheduleEnd'][
+                                :4]),
+                            int(espplayerMain['included'][i]['attributes']['scheduleEnd'][
                                 5:7]), int(
-                                espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][8:10]), int(
-                                espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][11:13]), int(
-                                espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][14:16]), int(
-                                espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'][17:19]))
-                        #5 min vor Streamstart anzeigen
-                        if (datetime.datetime.utcnow() - datetime_start > datetime.timedelta(seconds=-300)):
-                            #Umrechnung Zeitzone
-                            t = str(datetime.datetime.now() - datetime.datetime.utcnow())
-                            h, m, s = t.split(':')
-                            secondsDelta = int(
-                                datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s)).total_seconds())
-                            datetime_start_local = datetime_start + datetime.timedelta(seconds=secondsDelta)
+                                espplayerMain['included'][i]['attributes']['scheduleEnd'][
+                                8:10]), int(
+                                espplayerMain['included'][i]['attributes']['scheduleEnd'][
+                                11:13]), int(
+                                espplayerMain['included'][i]['attributes']['scheduleEnd'][
+                                14:16]), int(
+                                espplayerMain['included'][i]['attributes']['scheduleEnd'][
+                                17:19]))
+                        datetime_ende_local = datetime_ende + datetime.timedelta(seconds=secondsDelta)
 
-                            sender = espplayerMain['included'][i]['attributes']['path'].split('/')
+                        #Bild:
+                        j = 0
+                        while j < len(espplayerMain['included']):
+                            if espplayerMain['included'][j]['id'] == espplayerMain['included'][i]['relationships']['images']['data'][0]['id']:
+                                bildurl = espplayerMain['included'][j]['attributes']['src']
+                                break
+                            j = j + 1
 
-                            #endzeit
-                            datetime_ende = datetime.datetime(
-                                int(espplayerMain['included'][i]['attributes']['scheduleEnd'][
-                                    :4]),
-                                int(espplayerMain['included'][i]['attributes']['scheduleEnd'][
-                                    5:7]), int(
-                                    espplayerMain['included'][i]['attributes']['scheduleEnd'][
-                                    8:10]), int(
-                                    espplayerMain['included'][i]['attributes']['scheduleEnd'][
-                                    11:13]), int(
-                                    espplayerMain['included'][i]['attributes']['scheduleEnd'][
-                                    14:16]), int(
-                                    espplayerMain['included'][i]['attributes']['scheduleEnd'][
-                                    17:19]))
-                            datetime_ende_local = datetime_ende + datetime.timedelta(seconds=secondsDelta)
+                        if espplayerMain['included'][i]['attributes']['broadcastType'] == 'LIVE':
+                            foldername = str(
+                                espplayerMain['included'][i]['attributes']['broadcastType']+' - '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
+                                sender[0] + ': ' + espplayerMain['included'][i]['attributes']['name'] + ' (' +
+                                espplayerMain['included'][i]['attributes']['materialType'] + ')')
+                        else:
+                            foldername = str(str(datetime_start_local)[11:16]+' - '+str(datetime_ende_local)[11:16]+ ' Uhr: '+
+                              sender[0]+': '+espplayerMain['included'][i]['attributes']['name'] +' ('+espplayerMain['included'][i]['attributes']['broadcastType']+ ') ('+espplayerMain['included'][i]['attributes']['materialType']+')')
+                        url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerMain['included'][i]['id']})
+                        li = xbmcgui.ListItem(foldername, iconImage=bildurl)
+                        li.setProperty('IsPlayable', 'true')
+                        li.setInfo('video', {'plot': str(espplayerMain['included'][i]['attributes']['scheduleStart']+' - '+espplayerMain['included'][i]['attributes']['secondaryTitle'])})
+                        xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
+                    # print(datetime.datetime.now())
+        except KeyError:
+            i1 = i1 + 1
+        i = i + 1
 
-                            #Bild:
-                            j = 0
-                            while j < len(espplayerMain['included']):
-                                if espplayerMain['included'][j]['id'] == espplayerMain['included'][i]['relationships']['images']['data'][0]['id']:
-                                    bildurl = espplayerMain['included'][j]['attributes']['src']
-                                    break
-                                j = j + 1
-
-                            if espplayerMain['included'][i]['attributes']['broadcastType'] == 'LIVE':
-                                foldername = str(
-                                    espplayerMain['included'][i]['attributes']['broadcastType']+' - '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
-                                    sender[0] + ': ' + espplayerMain['included'][i]['attributes']['name'] + ' (' +
-                                    espplayerMain['included'][i]['attributes']['materialType'] + ')')
-                            else:
-                                foldername = str(str(datetime_start_local)[11:16]+' - '+str(datetime_ende_local)[11:16]+ ' Uhr: '+
-                                  sender[0]+': '+espplayerMain['included'][i]['attributes']['name'] +' ('+espplayerMain['included'][i]['attributes']['broadcastType']+ ') ('+espplayerMain['included'][i]['attributes']['materialType']+')')
-                            url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerMain['included'][i]['id']})
-                            li = xbmcgui.ListItem(foldername, iconImage=bildurl)
-                            li.setProperty('IsPlayable', 'true')
-                            li.setInfo('video', {'plot': str(espplayerMain['included'][i]['attributes']['scheduleStart']+" - "+espplayerMain['included'][i]['attributes']['secondaryTitle'])})
-                            xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
-                        # print(datetime.datetime.now())
-            except KeyError:
-                i1 = i1 + 1
-            i = i + 1
-
-        xbmcplugin.endOfDirectory(addon_handle)
-    except:
-        xbmcgui.Dialog().ok(_addon_name, str(meData['errors']))
-        xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
+    xbmcplugin.endOfDirectory(addon_handle)
+    #except:
+    #    xbmcgui.Dialog().ok(_addon_name, str(meData))
+    #    xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
 elif mode[0] == 'playStream':
     urlStream = urlStream1 + args['streamID'][0] + urlStream2
     espplayerStream = requests.get(url=urlStream, headers=header)
     if str(espplayerStream) == '<Response [403]>':
-        xbmcgui.Dialog().ok(_addon_name, "Stream hat noch nicht begonnen oder ist schon zu Ende")
+        xbmcgui.Dialog().ok(_addon_name, 'Stream hat noch nicht begonnen oder ist schon zu Ende')
         xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
     else:
         espplayerStream = espplayerStream.json()
