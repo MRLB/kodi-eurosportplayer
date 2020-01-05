@@ -117,10 +117,10 @@ user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
     'User-Agent': user_agent,
-    'Cookie': '[Cookie hier eintragen]',
+    'Cookie': '[enter cookie here]',
 }
 
-#territory = 'de'
+territory = 'de'
 urlEPG = 'https://eu3-prod-direct.eurosportplayer.com/cms/routes/home?include=default'
 urlMe = 'https://eu3-prod-direct.eurosportplayer.com/users/me'
 urlStream1 = 'https://eu3-prod-direct.eurosportplayer.com/playback/v2/videoPlaybackInfo/'
@@ -291,9 +291,10 @@ elif mode[0] == 'Schedule':
                         datetime_ende_local = datetime_ende + datetime.timedelta(
                             seconds=umrechnungZeitzoneUnterschiedSekunden())
 
-                        foldername = str(
-                            str(datetime_start_local)[8:10]+'.'+str(datetime_start_local)[5:7]+'.'+str(datetime_start_local)[0:4]+' '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
-                            espplayerSchedule['included'][i]['attributes']['name'] + ' ('+sender[0] + ')')
+                        if espplayerSchedule['included'][i]['attributes']['broadcastType'] == 'LIVE':
+                            foldername = str(espplayerSchedule['included'][i]['attributes']['broadcastType'])+': '+str(str(datetime_start_local)[8:10]+'.'+str(datetime_start_local)[5:7]+'.'+str(datetime_start_local)[0:4]+' '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +espplayerSchedule['included'][i]['attributes']['name'] + ' ('+sender[0] + ')')
+                        else:
+                            foldername = str(str(datetime_start_local)[8:10]+'.'+str(datetime_start_local)[5:7]+'.'+str(datetime_start_local)[0:4]+' '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +espplayerSchedule['included'][i]['attributes']['name'] + ' ('+sender[0] + ')')
 
                         url = build_url({'mode': 'playStream', 'foldername': foldername,
                                          'streamID': espplayerSchedule['included'][i]['id']})
