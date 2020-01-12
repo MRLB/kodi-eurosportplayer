@@ -117,7 +117,7 @@ user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
     'User-Agent': user_agent,
-    'Cookie': 'AMCV_ [Cookie hier eigeben, Start und Ende mal hier stehen lassen %5D%5D',
+    'Cookie': 'AMCV enter Cookie here - my cookie has over 550 letters 5D%5D',
 }
 
 territory = 'de'
@@ -136,13 +136,14 @@ if mode is None:
 
     try:
         territory = str(meData['data']['attributes']['verifiedHomeTerritory'])
-    except KeyError:
-        xbmc.log("Fehler")
-        xbmcgui.Dialog().ok(_addon_name, str(meData))
-        xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
-        sys.exit()
-    #print('ESP-Test' + str(meData['data']['attributes']['packages']))
-
+    except:
+        try:
+            territory = str(meData['data']['attributes']['currentLocationTerritory'])
+        except:
+            xbmc.log("Fehler: "+str(meData))
+            xbmcgui.Dialog().ok(_addon_name, str(meData))
+            xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
+            sys.exit()
 
     #Main auslesen:
     espplayerMain = requests.get(url=urlEPG, headers=header)
@@ -346,25 +347,21 @@ elif mode[0] == 'Archive':
     xbmcplugin.endOfDirectory(addon_handle)
 
 elif mode[0] == 'archiveAuswahl':
-    xbmc.log(str(args['url'][0]))
 
  #Main auslesen:
     #urlStart+str(args['url'][0])+'?include=default'
-    xbmc.log('URL123: '+urlStart+str(args['url'][0])+'?include=default')
     espplayerArchiveAuswahl = requests.get(url=urlStart+str(args['url'][0])+'?include=default', headers=header)
     espplayerArchiveAuswahl = espplayerArchiveAuswahl.json()
     i = 0
     i1 = 0
     availableInTerritory = False
     j = 0
-    xbmc.log(str(espplayerArchiveAuswahl))
     while i < len(espplayerArchiveAuswahl['included']):
         # print(str(i))
         try:
             if espplayerArchiveAuswahl['included'][i]['attributes']['videoType'] == 'STANDALONE':
                 if availableInTerritoryCheck(i, 1):
                     #espplayerMain['included'][i]['attributes']['scheduleStart']
-                        xbmc.log('hier')
                     #+' ('+espplayerArchiveAuswahl['included'][i]['attributes']['broadcastType']+ ') ('+espplayerArchiveAuswahl['included'][i]['attributes']['materialType']+')'
                         foldername = str(espplayerArchiveAuswahl['included'][i]['attributes']['scheduleStart']+': '+espplayerArchiveAuswahl['included'][i]['attributes']['name']+' - '+espplayerArchiveAuswahl['included'][i]['attributes']['secondaryTitle'])
                         url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerArchiveAuswahl['included'][i]['id']})
@@ -386,9 +383,7 @@ elif mode[0] == 'playStream':
         xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
     else:
         espplayerStream = espplayerStream.json()
-        xbmc.log(str(espplayerStream))
         streamURL = str(espplayerStream['data']['attributes']['streaming']['mss']['url'])
-        xbmc.log('hierasd ' + streamURL)
         li = xbmcgui.ListItem(path=streamURL)
         li.setProperty('inputstreamaddon', 'inputstream.adaptive')
         li.setProperty('inputstream.adaptive.manifest_type', 'ism')
