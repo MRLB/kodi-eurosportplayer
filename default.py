@@ -117,7 +117,7 @@ user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
     'User-Agent': user_agent,
-    'Cookie': '[enter cookie here]',
+    'Cookie': 'AMCV_ [Cookie hier eigeben, Start und Ende mal hier stehen lassen %5D%5D',
 }
 
 territory = 'de'
@@ -134,8 +134,13 @@ if mode is None:
     meData = requests.get(url=urlMe, headers=header)
     meData = meData.json()
 
-    #try:
-    territory = str(meData['data']['attributes']['verifiedHomeTerritory'])
+    try:
+        territory = str(meData['data']['attributes']['verifiedHomeTerritory'])
+    except KeyError:
+        xbmc.log("Fehler")
+        xbmcgui.Dialog().ok(_addon_name, str(meData))
+        xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
+        sys.exit()
     #print('ESP-Test' + str(meData['data']['attributes']['packages']))
 
 
@@ -303,13 +308,11 @@ elif mode[0] == 'Schedule':
                         li.setInfo('video', {'plot': str(
                             espplayerSchedule['included'][i]['attributes']['scheduleStart'] + ' - ' +
                             espplayerSchedule['included'][i]['attributes']['secondaryTitle'])})
+
                         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
         except KeyError:
             i1 = i1 + 1
         i = i + 1
-
-
-
     xbmcplugin.endOfDirectory(addon_handle)
 
 
@@ -385,7 +388,7 @@ elif mode[0] == 'playStream':
         espplayerStream = espplayerStream.json()
         xbmc.log(str(espplayerStream))
         streamURL = str(espplayerStream['data']['attributes']['streaming']['mss']['url'])
-
+        xbmc.log('hierasd ' + streamURL)
         li = xbmcgui.ListItem(path=streamURL)
         li.setProperty('inputstreamaddon', 'inputstream.adaptive')
         li.setProperty('inputstream.adaptive.manifest_type', 'ism')
