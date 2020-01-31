@@ -117,7 +117,7 @@ user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
     'User-Agent': user_agent,
-    'Cookie': 'AMCV_[enter cookie here]D%5D',
+    'Cookie': 'AMCV_ [enter cookie here - over 500 letters] 5D%5D',
 }
 
 territory = 'de'
@@ -225,7 +225,11 @@ if mode is None:
             url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerMain['included'][arrayZeitID[i]]['id']})
             li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i],0))
             li.setProperty('IsPlayable', 'true')
-            li.setInfo('video', {'plot': str(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])})
+            try:
+                secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+            except KeyError:
+                secondaryTitle = ''
+            li.setInfo('video', {'plot': str(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+secondaryTitle)})
             xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
         i = i + 3
 
@@ -251,7 +255,11 @@ if mode is None:
             url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerMain['included'][arrayZeitID[i]]['id']})
             li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i],0))
             li.setProperty('IsPlayable', 'true')
-            li.setInfo('video', {'plot': str(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])})
+            try:
+                secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+            except KeyError:
+                secondaryTitle = ''
+            li.setInfo('video', {'plot': str(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+secondaryTitle)})
             xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
         i = i + 3
 
@@ -273,15 +281,19 @@ if mode is None:
             if espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType'] == 'LIVE':
                 foldername = str(
                     espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+' - '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
-                    sender[0] + ': ' + espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] + ' (' +
+                    espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] + ' (' +
                     espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType'] + ')')
             else:
                 foldername = str(str(datetime_start_local)[11:16]+' - '+str(datetime_ende_local)[11:16]+ ' Uhr: '+
-                  sender[0]+': '+espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] +' ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+ ') ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType']+')')
+                  espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] +' ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+ ') ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType']+')')
             url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerMain['included'][arrayZeitID[i]]['id']})
             li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i],0))
             li.setProperty('IsPlayable', 'true')
-            li.setInfo('video', {'plot': str(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])})
+            try:
+                secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+            except KeyError:
+                secondaryTitle = ''
+            li.setInfo('video', {'plot': str(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+secondaryTitle)})
             xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
         i = i + 3
 
@@ -369,9 +381,13 @@ if mode is None:
                          'streamID': espplayerSchedule['included'][arrayZeitID[i]]['id']})
         li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i], 2))
         li.setProperty('IsPlayable', 'true')
+        try:
+            secondaryTitle = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+        except KeyError:
+            secondaryTitle = ''
+
         li.setInfo('video', {'plot': str(
-            espplayerSchedule['included'][arrayZeitID[i]]['attributes']['scheduleStart'] + ' - ' +
-            espplayerSchedule['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])})
+            espplayerSchedule['included'][arrayZeitID[i]]['attributes']['scheduleStart'] + ' - ' + secondaryTitle)})
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
         i = i + 2
 
@@ -465,9 +481,13 @@ elif mode[0] == 'Schedule':
                          'streamID': espplayerSchedule['included'][arrayZeitID[i]]['id']})
         li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i], 2))
         li.setProperty('IsPlayable', 'true')
+        try:
+            secondaryTitle = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+        except KeyError:
+            secondaryTitle = ''
         li.setInfo('video', {'plot': str(
             espplayerSchedule['included'][arrayZeitID[i]]['attributes']['scheduleStart'] + ' - ' +
-            espplayerSchedule['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])})
+            secondaryTitle)})
 
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
         i = i + 2
@@ -548,11 +568,20 @@ elif mode[0] == 'archiveAuswahl':
     while i < len(arrayZeitID):
         #espplayerMain['included'][i]['attributes']['scheduleStart']
                 #+' ('+espplayerArchiveAuswahl['included'][i]['attributes']['broadcastType']+ ') ('+espplayerArchiveAuswahl['included'][i]['attributes']['materialType']+')'
-        foldername = str(espplayerArchiveAuswahl['included'][arrayZeitID[i]]['attributes']['scheduleStart']+': '+espplayerArchiveAuswahl['included'][arrayZeitID[i]]['attributes']['name']+' - '+espplayerArchiveAuswahl['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+        try:
+            secondaryTitle = str(espplayerArchiveAuswahl['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+        except KeyError:
+            secondaryTitle = ''
+
+        foldername = str(espplayerArchiveAuswahl['included'][arrayZeitID[i]]['attributes']['scheduleStart']+': '+espplayerArchiveAuswahl['included'][arrayZeitID[i]]['attributes']['name']+' - '+secondaryTitle)
         url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerArchiveAuswahl['included'][arrayZeitID[i]]['id']})
         li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i],1))
         li.setProperty('IsPlayable', 'true')
-        li.setInfo('video', {'plot': str(espplayerArchiveAuswahl['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+espplayerArchiveAuswahl['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])})
+        try:
+            secondaryTitle = str(espplayerArchiveAuswahl['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+        except KeyError:
+            secondaryTitle = ''
+        li.setInfo('video', {'plot': str(espplayerArchiveAuswahl['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+secondaryTitle)})
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
         i = i + 2
     xbmcplugin.endOfDirectory(addon_handle)
