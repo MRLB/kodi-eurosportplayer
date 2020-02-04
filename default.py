@@ -590,7 +590,7 @@ elif mode[0] == 'archiveAuswahl':
 elif mode[0] == 'playStream':
     urlStream = urlStream1 + args['streamID'][0] + urlStream2
     espplayerStream = requests.get(url=urlStream, headers=header)
-    if str(espplayerStream) == '<Response [403]>':
+    if espplayerStream.status_code == 403:
         xbmcgui.Dialog().ok(_addon_name, 'Stream hat noch nicht begonnen oder ist schon zu Ende')
         xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
     else:
