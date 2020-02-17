@@ -55,13 +55,7 @@ def availableInTerritoryCheck(i,id):
     return availableInTerritory
 
 def zeitformatierung(time):
-    return datetime.datetime(int(time[:4]),
-    int(time[
-        5:7]), int(
-        time[8:10]), int(
-        time[11:13]), int(
-        time[14:16]), int(
-        time[17:19]))
+    return datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%SZ")
 
 def bildurlherausfinden(i, id):
     j = 0
