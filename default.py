@@ -1,3 +1,4 @@
+
 # coding: utf8
 
 import sys
@@ -35,20 +36,24 @@ def availableInTerritoryCheck(i,id):
     j = 0
     availableInTerritory = False
     if id == 0:
-        while j < len(espplayerMain['included'][i]['attributes']['playableTerritories']['territories']):
-            if espplayerMain['included'][i]['attributes']['playableTerritories']['territories'][j] == territory:
+        while j < len(espplayerMain['included'][i]['attributes']['geoRestrictions']['countries']):
+            xbmc.log(str(len(espplayerMain['included'][i]['attributes']['geoRestrictions']['countries'])))
+            if espplayerMain['included'][i]['attributes']['geoRestrictions']['countries'][j] == territory \
+                    or espplayerMain['included'][i]['attributes']['geoRestrictions']['countries'][j] == 'world':
                 availableInTerritory = True
                 break
             j = j + 1
     elif id == 1:
-        while j < len(espplayerArchiveAuswahl['included'][i]['attributes']['playableTerritories']['territories']):
-            if espplayerArchiveAuswahl['included'][i]['attributes']['playableTerritories']['territories'][j] == territory:
+        while j < len(espplayerArchiveAuswahl['included'][i]['attributes']['geoRestrictions']['countries']):
+            if espplayerArchiveAuswahl['included'][i]['attributes']['geoRestrictions']['countries'][j] == territory \
+                    or espplayerArchiveAuswahl['included'][i]['attributes']['geoRestrictions']['countries'][j] == 'world':
                 availableInTerritory = True
                 break
             j = j + 1
     elif id == 2:
-        while j < len(espplayerSchedule['included'][i]['attributes']['playableTerritories']['territories']):
-            if espplayerSchedule['included'][i]['attributes']['playableTerritories']['territories'][j] == territory:
+        while j < len(espplayerSchedule['included'][i]['attributes']['geoRestrictions']['countries']):
+            if espplayerSchedule['included'][i]['attributes']['geoRestrictions']['countries'][j] == territory \
+                    or espplayerSchedule['included'][i]['attributes']['geoRestrictions']['countries'][j] == 'world':
                 availableInTerritory = True
                 break
             j = j + 1
@@ -111,7 +116,7 @@ user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
     'User-Agent': user_agent,
-    'Cookie': 'AMCV_ [enter cookie here - over 500 letters] 5D%5D',
+    'Cookie': 'AMCV_9AE0 [Please enter cookie here] D%5D',
 }
 
 territory = 'de'
@@ -153,6 +158,7 @@ if mode is None:
         # print(str(i))
         try:
             if espplayerMain['included'][i]['attributes']['videoType'] == 'LIVE':
+                xbmc.log("LIVE: "+str(i))
                 if availableInTerritoryCheck(i,0):
                     #espplayerMain['included'][i]['attributes']['scheduleStart']
                     datetime_start = zeitformatierung(espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'])
