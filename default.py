@@ -37,7 +37,6 @@ def availableInTerritoryCheck(i,id):
     availableInTerritory = False
     if id == 0:
         while j < len(espplayerMain['included'][i]['attributes']['geoRestrictions']['countries']):
-            xbmc.log(str(len(espplayerMain['included'][i]['attributes']['geoRestrictions']['countries'])))
             if espplayerMain['included'][i]['attributes']['geoRestrictions']['countries'][j] == territory \
                     or espplayerMain['included'][i]['attributes']['geoRestrictions']['countries'][j] == 'world':
                 availableInTerritory = True
@@ -60,7 +59,15 @@ def availableInTerritoryCheck(i,id):
     return availableInTerritory
 
 def zeitformatierung(time):
-    return datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%SZ")
+    #funktioniert nicht, daher zurückgeändert
+    # return datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime(int(time[:4]),
+    int(time[
+        5:7]), int(
+        time[8:10]), int(
+        time[11:13]), int(
+        time[14:16]), int(
+        time[17:19]))
 
 def bildurlherausfinden(i, id):
     j = 0
@@ -116,7 +123,7 @@ user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
     'User-Agent': user_agent,
-    'Cookie': 'AMCV_9AE0 [Please enter cookie here] D%5D',
+    'Cookie': 'AMCV_9 [Enter cookie here] %5D%5D',
 }
 
 territory = 'de'
@@ -158,7 +165,7 @@ if mode is None:
         # print(str(i))
         try:
             if espplayerMain['included'][i]['attributes']['videoType'] == 'LIVE':
-                xbmc.log("LIVE: "+str(i))
+                xbmc.log("Try to open ID: "+str(i))
                 if availableInTerritoryCheck(i,0):
                     #espplayerMain['included'][i]['attributes']['scheduleStart']
                     datetime_start = zeitformatierung(espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'])
