@@ -119,11 +119,13 @@ mode = args.get('mode', None)
 
 #Rohdaten
 now = datetime.datetime.now()
-user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0'
+user_agent = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0'
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
     'User-Agent': user_agent,
-    'Cookie': 'AMCV_9 [Enter cookie here] %5D%5D',
+    'Referer': 'https://www.eurosportplayer.com/',
+    'X-disco-client': 'WEB:UNKNOWN:esplayer:prod', # wird benötigt
+    'Cookie': 'AMCV_9AE[...]5D%5D',
 }
 
 territory = 'de'
@@ -167,10 +169,14 @@ if mode is None:
             if espplayerMain['included'][i]['attributes']['videoType'] == 'LIVE':
                 xbmc.log("Try to open ID: "+str(i))
                 if availableInTerritoryCheck(i,0):
+                    xbmc.log("Territory ok")
                     #espplayerMain['included'][i]['attributes']['scheduleStart']
                     datetime_start = zeitformatierung(espplayerMain['included'][i]['attributes']['availabilityWindows'][0]['playableStart'])
+                    xbmc.log("datetime_start: "+str(datetime_start))
                     #5 min vor Streamstart anzeigen
+                    #if True:
                     if (datetime.datetime.utcnow() - datetime_start > datetime.timedelta(seconds=-300)):
+                        xbmc.log("Starttime ok")
                         eintraghinzugefuegt = False
                         sender = espplayerMain['included'][i]['attributes']['path'].split('/')
                         if str(sender[0][0:11]) == 'eurosport-1':
@@ -596,6 +602,7 @@ elif mode[0] == 'archiveAuswahl':
 
 elif mode[0] == 'playStream':
     urlStream = urlStream1 + args['streamID'][0] + urlStream2
+    xbmc.log("urlStream: "+str(urlStream))
     espplayerStream = requests.get(url=urlStream, headers=header)
     if espplayerStream.status_code == 403:
         xbmcgui.Dialog().ok(_addon_name, 'Stream hat noch nicht begonnen oder ist schon zu Ende')
@@ -603,6 +610,7 @@ elif mode[0] == 'playStream':
     else:
         espplayerStream = espplayerStream.json()
         streamURL = str(espplayerStream['data']['attributes']['streaming']['mss']['url'])
+        #streamURL = str(espplayerStream['data']['attributes']['streaming']['dash']['url'])
         li = xbmcgui.ListItem(path=streamURL)
         li.setProperty('inputstreamaddon', 'inputstream.adaptive')
         li.setProperty('inputstream.adaptive.manifest_type', 'ism')

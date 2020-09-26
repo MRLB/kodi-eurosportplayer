@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.eurosportplayer" version="13.1.8" name="Eurosport Player" provider-name="MRLB">
+<addon id="plugin.video.eurosportplayer" version="13.1.9" name="Eurosport Player" provider-name="MRLB">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
         <import addon="script.module.inputstreamhelper" version="0.3.3"/>
@@ -12,7 +12,9 @@
         <reuselanguageinvoker>true</reuselanguageinvoker>
         <news>
 			IMPORTANT:
-			Please enter your login-cookie into line 120 of default.py (see manuel)
+			Please enter your login-cookie into line 128 of default.py (see manuel)
+			v.13.1.9 (2020-09-26):
+			- fixed issue with header
 			v.13.1.8 (2020-05-16):
 			- fixed issue with date/time
 			v.13.1.7 (2020-05-11):
