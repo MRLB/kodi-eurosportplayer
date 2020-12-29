@@ -5,6 +5,6 @@
 		<setting id="password2" type="text" option="hidden" label="30032" enable="!eq(-1,)" default="" />
 	</category>
     <category label="30010">
-        <setting label="cookie" type="text" id="cookie" default="" visible="false"/>
+        <setting label="cookie" type="text" id="cookie" default="AMCV_9AE[...]%5D%5D" visible="true"/>
     </category>
 </settings>
