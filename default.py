@@ -118,6 +118,10 @@ def createOrdnerwithURL(mode, foldername, url):
 mode = args.get('mode', None)
 
 #Rohdaten
+addon = xbmcaddon.Addon()
+devicePath = addon.getSetting('Device Path')
+cookie = addon.getSetting('cookie')
+
 now = datetime.datetime.now()
 user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0'
 header = {
@@ -125,7 +129,7 @@ header = {
     'User-Agent': user_agent,
     'Referer': 'https://www.eurosportplayer.com/',
     'X-disco-client': 'WEB:UNKNOWN:esplayer:prod', # wird benötigt
-    'Cookie': 'AMCV_9AE[...]5D%5D',
+    'Cookie': cookie, # enter cookie into /resources/settings.xml as default-value at cookie-setting (line 8)
 }
 
 territory = 'de'
@@ -179,9 +183,10 @@ if mode is None:
                         xbmc.log("Starttime ok")
                         eintraghinzugefuegt = False
                         sender = espplayerMain['included'][i]['attributes']['path'].split('/')
+                        xbmc.log("Sender: "+str(sender[0]))
                         if str(sender[0][0:11]) == 'eurosport-1':
                             espversion = 1
-                        elif str(sender[0][0:11]) == 'eurosport-2':
+                        elif str(sender[0][0:11]) == 'eurosport-2' or str(sender[0][0:12]) == 'eurorsport-2':
                             espversion = 2
                         else:
                             espversion = 0
@@ -415,17 +420,20 @@ elif mode[0] == 'Schedule':
 
     if args['foldername'][0] == 'Schedule Eurosport 1':
         suchsender = 'eurosport-1'
+        suchsender2 = 'eurosport-1'
         foldername = 'Schedule Eurosport 1 (heute):'
         li = xbmcgui.ListItem(foldername, iconImage='DefaultFolder.png')
         xbmcplugin.addDirectoryItem(handle=addon_handle, url='', listitem=li)
 
     elif args['foldername'][0] == 'Schedule Eurosport 2':
         suchsender = 'eurosport-2'
+        suchsender2 = 'eurorsport-2'
         foldername ='Schedule Eurosport 2 (heute):'
         li = xbmcgui.ListItem(foldername, iconImage='DefaultFolder.png')
         xbmcplugin.addDirectoryItem(handle=addon_handle, url='', listitem=li)
     else:
         suchsender = ''
+        suchsender2 = ''
         foldername = 'Error'
         li = xbmcgui.ListItem(foldername, iconImage='DefaultFolder.png')
         xbmcplugin.addDirectoryItem(handle=addon_handle, url='', listitem=li)
@@ -441,7 +449,7 @@ elif mode[0] == 'Schedule':
     while i < len(espplayerSchedule['included']):
         try:
             sender = espplayerSchedule['included'][i]['attributes']['path'].split('/')
-            if sender[0][0:11] == suchsender:
+            if sender[0][0:len(suchsender)] == suchsender or sender[0][0:len(suchsender2)] == suchsender2:
                 if availableInTerritoryCheck(i, 2):
                     datetime_start = zeitformatierung(
                         espplayerSchedule['included'][i]['attributes']['availabilityWindows'][0]['playableStart'])
