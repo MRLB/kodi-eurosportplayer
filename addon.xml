@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.eurosportplayer" version="13.1.11" name="Eurosport Player" provider-name="MRLB">
+<addon id="plugin.video.eurosportplayer" version="13.1.12" name="Eurosport Player" provider-name="MRLB">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
         <import addon="script.module.inputstreamhelper" version="0.3.3"/>
@@ -13,6 +13,8 @@
         <news>
 			IMPORTANT:
 			Please enter your login-cookie into line 8 of resources/settings.xml as default-value (see manuel)
+			v.13.1.12 (2021-01-24):
+			- added more stream-information into the interface
 			v.13.1.11 (2020-12-29):
 			- fixed error with eurosport 2 and added cookie to setting.xml
 			v.13.1.10 (2020-09-26):

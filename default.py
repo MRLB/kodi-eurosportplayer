@@ -232,21 +232,32 @@ if mode is None:
             datetime_ende = zeitformatierung(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleEnd'])
             datetime_ende_local = datetime_ende + datetime.timedelta(seconds=umrechnungZeitzoneUnterschiedSekunden())
 
-            if espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType'] == 'LIVE':
-                foldername = str(
-                    espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+' - '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
-                    sender[0] + ': ' + espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] + ' (' +
-                    espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType'] + ')')
-            else:
-                foldername = str(str(datetime_start_local)[11:16]+' - '+str(datetime_ende_local)[11:16]+ ' Uhr: '+
-                  sender[0]+': '+espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] +' ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+ ') ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType']+')')
-            url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerMain['included'][arrayZeitID[i]]['id']})
-            li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i],0))
-            li.setProperty('IsPlayable', 'true')
             try:
                 secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
             except KeyError:
                 secondaryTitle = ''
+            if espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType'] == 'LIVE':
+                foldername = str(
+                    espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+' - '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
+                    sender[0] + ': ' + espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] + ': ' +
+                    secondaryTitle + ' (' +
+                    espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType'] + ')')
+            else:
+                foldername = str(str(datetime_start_local)[11:16]+' - '+str(datetime_ende_local)[11:16]+ ' Uhr: '+
+                  sender[0]+': '+espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] +
+                                 ': '+secondaryTitle +
+                                 ' ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+ ') ('
+                                 +espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType']+')')
+            url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerMain['included'][arrayZeitID[i]]['id']})
+            li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i],0))
+            li.setProperty('IsPlayable', 'true')
+            try:
+                secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['description'])
+            except KeyError:
+                try:
+                    secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['name'])+ ' - '+str(espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+                except KeyError:
+                    secondaryTitle = ''
             li.setInfo('video', {'plot': str(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+secondaryTitle)})
             xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
         i = i + 3
@@ -261,22 +272,29 @@ if mode is None:
             #endzeit
             datetime_ende = zeitformatierung(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleEnd'])
             datetime_ende_local = datetime_ende + datetime.timedelta(seconds=umrechnungZeitzoneUnterschiedSekunden())
-
-            if espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType'] == 'LIVE':
-                foldername = str(
-                    espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+' - '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
-                    sender[0] + ': ' + espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] + ' (' +
-                    espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType'] + ')')
-            else:
-                foldername = str(str(datetime_start_local)[11:16]+' - '+str(datetime_ende_local)[11:16]+ ' Uhr: '+
-                  sender[0]+': '+espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] +' ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+ ') ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType']+')')
-            url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerMain['included'][arrayZeitID[i]]['id']})
-            li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i],0))
-            li.setProperty('IsPlayable', 'true')
             try:
                 secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
             except KeyError:
                 secondaryTitle = ''
+            if espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType'] == 'LIVE':
+                foldername = str(
+                    espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+' - '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
+                    sender[0] + ': ' + espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] + ': ' +
+                    secondaryTitle + ' (' +
+                    espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType'] + ')')
+            else:
+                foldername = str(str(datetime_start_local)[11:16]+' - '+str(datetime_ende_local)[11:16]+ ' Uhr: '+
+                  sender[0]+': '+espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] +': '+secondaryTitle + ' ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+ ') ('+espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType']+')')
+            url = build_url({'mode': 'playStream', 'foldername': foldername, 'streamID': espplayerMain['included'][arrayZeitID[i]]['id']})
+            li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i],0))
+            li.setProperty('IsPlayable', 'true')
+            try:
+                secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['description'])
+            except KeyError:
+                try:
+                    secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['name'])+ ' - '+str(espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+                except KeyError:
+                    secondaryTitle = ''
             li.setInfo('video', {'plot': str(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+secondaryTitle)})
             xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
         i = i + 3
@@ -291,15 +309,19 @@ if mode is None:
         if arrayZeitID[i+1] == 0:
             datetime_start_local = arrayZeitID[i-1] + datetime.timedelta(seconds=int(umrechnungZeitzoneUnterschiedSekunden()))
             sender = espplayerMain['included'][arrayZeitID[i]]['attributes']['path'].split('/')
-
             #endzeit
             datetime_ende = zeitformatierung(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleEnd'])
             datetime_ende_local = datetime_ende + datetime.timedelta(seconds=umrechnungZeitzoneUnterschiedSekunden())
 
             if espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType'] == 'LIVE':
+                try:
+                    secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+                except KeyError:
+                    secondaryTitle = ''
                 foldername = str(
                     espplayerMain['included'][arrayZeitID[i]]['attributes']['broadcastType']+' - '+str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
-                    espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] + ' (' +
+                    espplayerMain['included'][arrayZeitID[i]]['attributes']['name'] + ': ' +
+                    secondaryTitle + ' (' +
                     espplayerMain['included'][arrayZeitID[i]]['attributes']['materialType'] + ')')
             else:
                 foldername = str(str(datetime_start_local)[11:16]+' - '+str(datetime_ende_local)[11:16]+ ' Uhr: '+
@@ -308,9 +330,12 @@ if mode is None:
             li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i],0))
             li.setProperty('IsPlayable', 'true')
             try:
-                secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+                secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['description'])
             except KeyError:
-                secondaryTitle = ''
+                try:
+                    secondaryTitle = str(espplayerMain['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+                except KeyError:
+                    secondaryTitle = ''
             li.setInfo('video', {'plot': str(espplayerMain['included'][arrayZeitID[i]]['attributes']['scheduleStart']+' - '+secondaryTitle)})
             xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
         i = i + 3
@@ -389,10 +414,14 @@ if mode is None:
         datetime_ende = zeitformatierung(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['scheduleEnd'])
         datetime_ende_local = datetime_ende + datetime.timedelta(
             seconds=umrechnungZeitzoneUnterschiedSekunden())
-
+        try:
+            secondaryTitle = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+        except KeyError:
+            secondaryTitle = ''
         foldername = str(
             str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +
-            sender[0] + ': ' + espplayerSchedule['included'][arrayZeitID[i]]['attributes']['name'] + ' (' +
+            sender[0] + ': ' + espplayerSchedule['included'][arrayZeitID[i]]['attributes']['name'] + ': ' +
+            secondaryTitle + ' (' +
             espplayerSchedule['included'][arrayZeitID[i]]['attributes']['materialType'] + ')')
 
         url = build_url({'mode': 'playStream', 'foldername': foldername,
@@ -400,9 +429,12 @@ if mode is None:
         li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i], 2))
         li.setProperty('IsPlayable', 'true')
         try:
-            secondaryTitle = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+            secondaryTitle = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['description'])
         except KeyError:
-            secondaryTitle = ''
+            try:
+                secondaryTitle = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+            except KeyError:
+                secondaryTitle = ''
 
         li.setInfo('video', {'plot': str(
             espplayerSchedule['included'][arrayZeitID[i]]['attributes']['scheduleStart'] + ' - ' + secondaryTitle)})
@@ -493,19 +525,26 @@ elif mode[0] == 'Schedule':
             seconds=umrechnungZeitzoneUnterschiedSekunden())
 
         #str(datetime_start_local)[8:10]+'.'+str(datetime_start_local)[5:7]+'.'+str(datetime_start_local)[0:4]
+        try:
+            secondaryTitle = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+        except KeyError:
+            secondaryTitle = ''
         if espplayerSchedule['included'][arrayZeitID[i]]['attributes']['broadcastType'] == 'LIVE':
-            foldername = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['broadcastType'])+': '+str(str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +espplayerSchedule['included'][arrayZeitID[i]]['attributes']['name'] + ' ('+sender[0] + ')')
+            foldername = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['broadcastType'])+': '+str(str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +espplayerSchedule['included'][arrayZeitID[i]]['attributes']['name'] + ': '+secondaryTitle+ ' ('+sender[0] + ')')
         else:
-            foldername = str(str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +espplayerSchedule['included'][arrayZeitID[i]]['attributes']['name'] + ' ('+sender[0] + ')')
+            foldername = str(str(datetime_start_local)[11:16] + ' - ' + str(datetime_ende_local)[11:16] + ' Uhr: ' +espplayerSchedule['included'][arrayZeitID[i]]['attributes']['name'] + ': '+secondaryTitle+' ('+sender[0] + ')')
 
         url = build_url({'mode': 'playStream', 'foldername': foldername,
                          'streamID': espplayerSchedule['included'][arrayZeitID[i]]['id']})
         li = xbmcgui.ListItem(foldername, iconImage=bildurlherausfinden(arrayZeitID[i], 2))
         li.setProperty('IsPlayable', 'true')
         try:
-            secondaryTitle = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+            secondaryTitle = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['description'])
         except KeyError:
-            secondaryTitle = ''
+            try:
+                secondaryTitle = str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['name'])+' - '+str(espplayerSchedule['included'][arrayZeitID[i]]['attributes']['secondaryTitle'])
+            except KeyError:
+                secondaryTitle = ''
         li.setInfo('video', {'plot': str(
             espplayerSchedule['included'][arrayZeitID[i]]['attributes']['scheduleStart'] + ' - ' +
             secondaryTitle)})
