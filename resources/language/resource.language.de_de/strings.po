@@ -28,3 +28,30 @@ msgctxt "#30032"
 msgid "Password"
 msgstr "Passwort"
 
+msgctxt "#30100"
+msgid "TV channels"
+msgstr "Lineare TV-Kanäle"
+
+msgctxt "#30101"
+msgid "Bonus channels"
+msgstr "Bonuskanäle"
+
+msgctxt "#30102"
+msgid "Archive"
+msgstr "Archiv"
+
+msgctxt "#30103"
+msgid "Schedule"
+msgstr "Schedule"
+
+msgctxt "#30104"
+msgid "Next liveevents today"
+msgstr "Nächste Liveevents heute"
+
+msgctxt "#30105"
+msgid "today"
+msgstr "heute"
+
+msgctxt "#30106"
+msgid " time"
+msgstr " Uhr"
