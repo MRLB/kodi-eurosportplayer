@@ -128,7 +128,7 @@ now = datetime.datetime.now()
 user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0'
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
-    'User-Agent': user_agent
+    'User-Agent': user_agent,
     'Referer': 'https://www.eurosportplayer.com/',
     'X-disco-client': 'WEB:UNKNOWN:esplayer:prod', # wird benötigt
     'Cookie': cookie, # enter cookie into /resources/settings.xml as default-value at cookie-setting (line 8)
