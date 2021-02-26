@@ -128,7 +128,7 @@ now = datetime.datetime.now()
 user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0'
 header = {
     'Host': 'eu3-prod-direct.eurosportplayer.com',
-    'User-Agent': user_agent.encode('ascii','ignore'),
+    'User-Agent': user_agent
     'Referer': 'https://www.eurosportplayer.com/',
     'X-disco-client': 'WEB:UNKNOWN:esplayer:prod', # wird benötigt
     'Cookie': cookie, # enter cookie into /resources/settings.xml as default-value at cookie-setting (line 8)
@@ -670,7 +670,7 @@ elif mode[0] == 'playStream':
         xbmc.log("StreamURL: "+str(streamURL))
         li = xbmcgui.ListItem(path=streamURL)
         li.setProperty('inputstream', 'inputstream.adaptive')
-        li.setProperty('inputstream.adaptive.license_key', "https://discovery-eur.conax.cloud/fairplay/clearkey")
+        #li.setProperty('inputstream.adaptive.license_key', "https://discovery-eur.conax.cloud/fairplay/clearkey")
         li.setProperty('inputstream.adaptive.manifest_type', 'hls')
         #li.setProperty('inputstream.adaptive.manifest_type', 'ism')
         #li.setProperty('inputstream.adaptive.manifest_type', 'mpd')
