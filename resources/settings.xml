@@ -1,51 +1,12 @@
-<?xml version="1.0" ?>
-<settings version="1">
-	<section id="plugin.video.eurosportplayer">
-		<category id="allgemein" label="30030" help="">
-			<group id="1">
-				<setting id="username2" type="string" label="30031" help="">
-					<level>0</level>
-					<default/>
-					<constraints>
-						<allowempty>true</allowempty>
-					</constraints>
-					<control type="edit" format="string">
-						<heading>30031</heading>
-					</control>
-				</setting>
-				<setting id="password2" type="string" label="30032" help="">
-					<level>0</level>
-					<default/>
-					<constraints>
-						<allowempty>true</allowempty>
-					</constraints>
-					<dependencies>
-						<dependency type="enable">
-							<condition operator="!is" setting="username2"/>
-						</dependency>
-					</dependencies>
-					<control type="edit" format="string">
-						<heading>30032</heading>
-						<hidden>true</hidden>
-					</control>
-				</setting>
-			</group>
-		</category>
-		<category id="view" label="30010" help="">
-			<group id="1">
-				<setting id="cookie" type="string" label="cookie" help="">
-					<level>0</level>
-					<default>AMCV_9AE0F0[...]sq=%5B%5BB%5D%5D</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
-					<control type="edit" format="string">
-						<heading>cookie</heading>
-					</control>
-				</setting>
-			</group>
-		</category>
-	</section>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<category label="30030">
+		<setting id="username2" type="text" label="30031" default="" />
+		<setting id="password2" type="text" option="hidden" label="30032" enable="!eq(-1,)" default="" />
+		<setting id="streamselection" type="labelenum" label="30020" values="mss|hls|dash" default="hls"/>
+	</category>
+    <category label="30010">
+        <setting label="cookie" type="text" id="cookie" default="AMCV_9AE0...619035_15=1" visible="true"/>
+    </category>
 </settings>
+

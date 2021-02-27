@@ -55,3 +55,15 @@ msgstr "heute"
 msgctxt "#30106"
 msgid " time"
 msgstr " Uhr"
+
+msgctxt "#30107"
+msgid "Stream has not started yet or is already finished"
+msgstr "Stream hat noch nicht begonnen oder ist schon zu Ende"
+
+msgctxt "#30108"
+msgid "Error - stream selection does not exist"
+msgstr "Fehler - Streamauswahl exisitiert nicht"
+
+msgctxt "#30020"
+msgid "Stream selection"
+msgstr "Streamauswahl"

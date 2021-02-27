@@ -659,20 +659,29 @@ elif mode[0] == 'playStream':
     xbmc.log("urlStream: "+str(urlStream))
     espplayerStream = requests.get(url=urlStream, headers=header)
     if espplayerStream.status_code == 403:
-        xbmcgui.Dialog().ok(_addon_name, 'Stream hat noch nicht begonnen oder ist schon zu Ende')
+        xbmcgui.Dialog().ok(_addon_name, __language__(30107))
         xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
     else:
         espplayerStream = espplayerStream.json()
         xbmc.log(str(espplayerStream))
-        #streamURL = str(espplayerStream['data']['attributes']['streaming']['mss']['url'])
-        streamURL = str(espplayerStream['data']['attributes']['streaming']['hls']['url'])
-        #streamURL = str(espplayerStream['data']['attributes']['streaming']['dash']['url'])
+        if _addon.getSetting('streamselection') == 'mss':
+            streamURL = str(espplayerStream['data']['attributes']['streaming']['mss']['url'])
+        elif _addon.getSetting('streamselection') == 'hls':
+            streamURL = str(espplayerStream['data']['attributes']['streaming']['hls']['url'])
+        elif _addon.getSetting('streamselection') == 'dash':
+            streamURL = str(espplayerStream['data']['attributes']['streaming']['dash']['url'])
+        else:
+            xbmcgui.Dialog().ok(_addon_name, __language__(30108))
+            xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
         xbmc.log("StreamURL: "+str(streamURL))
         li = xbmcgui.ListItem(path=streamURL)
         li.setProperty('inputstream', 'inputstream.adaptive')
         #li.setProperty('inputstream.adaptive.license_key', "https://discovery-eur.conax.cloud/fairplay/clearkey")
-        li.setProperty('inputstream.adaptive.manifest_type', 'hls')
-        #li.setProperty('inputstream.adaptive.manifest_type', 'ism')
-        #li.setProperty('inputstream.adaptive.manifest_type', 'mpd')
+        if _addon.getSetting('streamselection') == 'mss':
+            li.setProperty('inputstream.adaptive.manifest_type', 'ism')
+        elif _addon.getSetting('streamselection') == 'hls':
+            li.setProperty('inputstream.adaptive.manifest_type', 'hls')
+        elif _addon.getSetting('streamselection') == 'dash':
+            li.setProperty('inputstream.adaptive.manifest_type', 'mpd')
         li.setContentLookup(False)
         xbmcplugin.setResolvedUrl(_addon_handler, True, listitem=li)

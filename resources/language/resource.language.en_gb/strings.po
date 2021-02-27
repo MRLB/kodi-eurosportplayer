@@ -55,3 +55,15 @@ msgstr "today"
 msgctxt "#30106"
 msgid " time"
 msgstr ""
+
+msgctxt "#30107"
+msgid "Stream has not started yet or is already finished"
+msgstr "Stream has not started yet or is already finished"
+
+msgctxt "#30108"
+msgid "Error - stream selection does not exist"
+msgstr "Error - stream selection does not exist"
+
+msgctxt "#30020"
+msgid "Stream selection"
+msgstr "Stream selection"
