@@ -675,6 +675,7 @@ elif mode[0] == 'playStream':
             xbmcplugin.setResolvedUrl(_addon_handler, False, xbmcgui.ListItem())
         xbmc.log("StreamURL: "+str(streamURL))
         li = xbmcgui.ListItem(path=streamURL)
+        li.setMimeType('application/x-mpegURL')
         li.setProperty('inputstream', 'inputstream.adaptive')
         #li.setProperty('inputstream.adaptive.license_key', "https://discovery-eur.conax.cloud/fairplay/clearkey")
         if _addon.getSetting('streamselection') == 'mss':
