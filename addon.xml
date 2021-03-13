@@ -2,7 +2,7 @@
 <addon id="plugin.video.eurosportplayer" version="13.2.1+matrix.1" name="Eurosport Player" provider-name="MRLB">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
-        <import addon="script.module.inputstreamhelper" version="0.3.3"/>
+        <import addon="script.module.inputstreamhelper" version="0.5.2"/>
 		<import addon="script.module.requests"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
