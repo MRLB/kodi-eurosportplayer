@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.eurosportplayer" version="13.2.1+matrix.1" name="Eurosport Player" provider-name="MRLB">
+<addon id="plugin.video.eurosportplayer" version="13.2.2+matrix.0" name="Eurosport Player" provider-name="MRLB">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.inputstreamhelper" version="0.5.2"/>
@@ -13,6 +13,8 @@
         <news>
 			IMPORTANT:
 			Please enter your login-cookie into line 9 of resources/settings.xml as default-value (see manuel)
+			v.13.2.2+matrix.0 (2023-01-20):
+			- Kodi 20 support
 			v.13.2.1+matrix.1 (2021-03-13):
 			- fixed that stream starts again
 			v.13.2.0+matrix.1 (2021-02-27):

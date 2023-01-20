@@ -7,6 +7,7 @@ import xbmcplugin
 import urllib.parse as urllib
 import xbmc
 import xbmcaddon
+import xbmcvfs
 #import imp
 
 import json
@@ -29,7 +30,7 @@ _addon_name    = _addon.getAddonInfo('name')
 __language__   = _addon.getLocalizedString
 _addon_handler = int(sys.argv[1])
 _addon_url     = sys.argv[0]
-_addon_path    = xbmc.translatePath(_addon.getAddonInfo('path') )
+_addon_path    = xbmcvfs.translatePath(_addon.getAddonInfo('path') )
 
 def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
